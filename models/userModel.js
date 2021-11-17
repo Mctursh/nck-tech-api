@@ -1,7 +1,8 @@
+require('dotenv').config()
 const bcrypt = require('bcrypt');
 const mongoose = require("./connection")
 const { handleError } = require("../helper")
-const saltRounds = 10;
+const saltRounds = process.env.SALT_ROUNDS;
 
 const userSchema = new mongoose.Schema({
     username: {

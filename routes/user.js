@@ -1,14 +1,15 @@
+require('dotenv').config()
 const express = require("express")
 const { createUser, loginUser, getUserId } = require("../models/userModel")
 const router = express.Router()
 const jwt = require('jsonwebtoken');
-const privateKey = "this is my private key"
+const privateKey = process.env.PRIVATE_KEY
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
     const [status, data] = await loginUser(username.toLowerCase(), password)
     if (status) { // checks if user was succefully logged in
-        jwt.sign({ data }, privateKey, (err, token) => {
+        jwt.sign({ data }, privateKey, {expiresIn: "30s"}, (err, token) => {
             if (!err) { //checks if token was succefully generated
                 res.json({
                     statusCode: 200,

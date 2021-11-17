@@ -4,13 +4,14 @@ const { createItem, getItemId, updateItem, deleteItem, getAllItems } = require("
 
 //Route 
 router.get("/get-all-products", async (req, res) => {
+    const { payLoad } = req.session
     const [ status, data ] = await getAllItems()
     if (status == true) {
         res.json({
             statusCode: 200,
             statusText: "Success",
             message: "Successfully fetched all the items",
-            data
+            data: payLoad != undefined ? [{signedInUser: payLoad.data.username}, ...data] : data
         })    
     } else {
         res.json({
