@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const { createItem, getID, updateItem, deleteItem, getAllItems } = require("../model")
+const { createItem, getItemId, updateItem, deleteItem, getAllItems } = require("../models/productModel")
 
 //Route 
 router.get("/get-all-products", async (req, res) => {
@@ -24,7 +24,7 @@ router.get("/get-all-products", async (req, res) => {
 //Route to Create new Item
 router.post("/create-new-product", async (req, res) => {
     const { name, price, quantity } = req.body
-    const id = await getID()
+    const id = await getItemId()
     const [status, data] = await createItem({name, price, quantity, id})
     if (status == true) {
         res.json({
