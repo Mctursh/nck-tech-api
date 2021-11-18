@@ -4,7 +4,7 @@ const { createItem, getItemId, updateItem, deleteItem, getItems } = require("../
 
 //Route 
 router.get("/get-all-products", async (req, res) => {
-    const { payLoad } = req.session
+    const payLoad = req.session.paylaod
     let userData;
     if (payLoad != undefined) {  //checks if there is an authenticated user and returns the user data 
         userData = {id: payLoad.data.id , username: payLoad.data.username}

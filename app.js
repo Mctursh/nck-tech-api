@@ -5,20 +5,25 @@ const session = require("express-session")
 const MongoStore = require('connect-mongo');
 const { dbClient } = require("./models/connection")
 
+
 const productsRoutes = require("./routes/product")
 const userRoutes = require("./routes/user")
 const cartRoutes = require("./routes/cart")
 
 const app = express()
 
+const url = `mongodb+srv://admin-ayoade:${process.env.MONGO_PASSWORD}@cluster0.4d1r2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
+const options = { useNewUrlParser: true, useUnifiedTopology: true }
+
+// console.log(dbClient);
 app.use(session({
   secret: "mysecretstring",
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ client: dbClient }), // iniatilizing the store with an existing connection
+  store: MongoStore.create({ mongoUrl: url, mongoOptions: options }), // iniatilizing the store with an existing connection
+//   store: MongoStore.create({ client: dbClient }), // iniatilizing the store with an existing connection
   cookie: { maxAge: 60 * 60 * 24 * 7 * 1000} // the cookie expires in 7 days
 }));
-
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
