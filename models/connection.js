@@ -12,7 +12,15 @@ main()
     .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect(url, options);
+  return await mongoose.connect(url, options);
 }
 
-module.exports = mongoose
+const db = mongoose.connection;
+
+db.on('error', (err) => {
+    console.log("Failed to connect to DB");
+});
+
+const dbClient = db.getClient()
+
+module.exports = { dbClient, mongoose }

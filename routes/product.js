@@ -1,17 +1,21 @@
 const express = require("express")
 const router = express.Router()
-const { createItem, getItemId, updateItem, deleteItem, getAllItems } = require("../models/productModel")
+const { createItem, getItemId, updateItem, deleteItem, getItems } = require("../models/productModel")
 
 //Route 
 router.get("/get-all-products", async (req, res) => {
     const { payLoad } = req.session
-    const [ status, data ] = await getAllItems()
+    let userData;
+    if (payLoad != undefined) {  //checks if there is an authenticated user and returns the user data 
+        userData = {id: payLoad.data.id , username: payLoad.data.username}
+    }
+    const [ status, data ] = await getItems()
     if (status == true) {
         res.json({
             statusCode: 200,
             statusText: "Success",
             message: "Successfully fetched all the items",
-            data: payLoad != undefined ? [{signedInUser: payLoad.data.username}, ...data] : data
+            data: payLoad != undefined ? [userData, ...data] : data
         })    
     } else {
         res.json({

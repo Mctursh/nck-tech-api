@@ -1,8 +1,8 @@
 require('dotenv').config()
 const bcrypt = require('bcrypt');
-const mongoose = require("./connection")
+const { mongoose } = require("./connection")
 const { handleError } = require("../helper")
-const saltRounds = process.env.SALT_ROUNDS;
+const saltRounds = parseInt(process.env.SALT_ROUNDS, 10)
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -12,10 +12,6 @@ const userSchema = new mongoose.Schema({
     hash: {
         type: String,
         required: true
-    },
-    cartItem: {
-        type: Array,
-        default: []
     },
     id: {
         type: Number,
@@ -75,6 +71,10 @@ const getUserId = async () => {
     } else {
       return currHighest.id + 1      
     }
+}
+
+const getUserCart = async(itemId, userId) => {
+
 }
 
 module.exports = { createUser, loginUser, getUserId }

@@ -1,6 +1,8 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const session = require("express-session")
+const MongoStore = require('connect-mongo');
+const { dbClient } = require("./models/connection")
 
 const productsRoutes = require("./routes/product")
 const userRoutes = require("./routes/user")
@@ -11,7 +13,9 @@ const app = express()
 app.use(session({
   secret: "mysecretstring",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: MongoStore.create({ client: dbClient }), // iniatilizing the store with an existing connection
+  cookie: { maxAge: 60 * 60 * 24 * 7 * 1000} // the cookie expires in 7 days
 }));
 
 app.use(express.json())

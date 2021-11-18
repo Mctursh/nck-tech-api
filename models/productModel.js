@@ -1,4 +1,4 @@
-const mongoose = require("./connection")
+const { mongoose } = require("./connection")
 const { handleError } = require("../helper")
 
 const itemSchema = new mongoose.Schema({
@@ -7,7 +7,7 @@ const itemSchema = new mongoose.Schema({
         required: true
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     quantity: {
@@ -23,20 +23,20 @@ const itemSchema = new mongoose.Schema({
 const Item = new mongoose.model("Item", itemSchema)
 
 const createItem = async (itemDetail) => {
-  const [status, itemError] = await handleError(Item.create(itemDetail))
-  if(itemError) {
+  const [data, isError] = await handleError(Item.create(itemDetail))
+  if(isError) {
     return [false]
   } else {
-    return [true, status]
+    return [true, data]
   }
 }
 
-const getAllItems = async () => {
-    const [status, itemError] = await handleError(Item.find())
-    if(itemError) {
+const getItems = async (query = {}) => {
+    const [data, isError] = await handleError(Item.find(query))
+    if(isError) {
       return [false]
     } else {
-      return [true, status]
+      return [true, data]
     }
 }
 
@@ -53,22 +53,30 @@ const getItemId = async () => {
 }
 
 const updateItem = async (id, payload) => {
-    const [status, itemError] = await handleError(Item.findOneAndUpdate({"id": id}, payload))
-    if(itemError) {
+    const [data, isError] = await handleError(Item.findOneAndUpdate({"id": id}, payload))
+    if(isError) {
       return [false]
     } else {
-      return [true, status]
+      return [true, data]
     }
 }
 
 const deleteItem = async(id) => {
-    const [status, itemError] = await handleError(Item.deleteOne(id))
-    if(itemError) {
+    const [data, isError] = await handleError(Item.deleteOne(id))
+    if(isError) {
       return [false]
     } else {
-      return [true, status]
-    }
-    
+      return [true, data]
+    }    
 } 
 
-module.exports = { createItem, getItemId, updateItem, deleteItem, getAllItems }
+const getItemById = async(id) => {
+    const [status, data] = await getItems({id})
+    if (status == true) { //returns an array containing a boolean and an response object from the query
+      return [true, data] 
+    } else {
+      return [false, data]
+    }
+}
+
+module.exports = { createItem, getItemId, updateItem, deleteItem, getItems, getItemById }

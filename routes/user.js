@@ -9,7 +9,7 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
     const [status, data] = await loginUser(username.toLowerCase(), password)
     if (status) { // checks if user was succefully logged in
-        jwt.sign({ data }, privateKey, {expiresIn: "30s"}, (err, token) => {
+        jwt.sign({ data }, privateKey, {expiresIn: "1h"}, (err, token) => {
             if (!err) { //checks if token was succefully generated
                 res.json({
                     statusCode: 200,
