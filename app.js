@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express")
 const bodyParser = require("body-parser")
 const session = require("express-session")
@@ -25,4 +26,9 @@ app.use("/product", productsRoutes)
 app.use("/user", userRoutes)
 app.use("/cart", cartRoutes)
 
-app.listen(3000, () => console.log("succefully running on port 3000"))
+// app.listen(3000, () => console.log("succefully running on port 3000"))
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.warn(`App listening on port ${PORT}`);
+});
